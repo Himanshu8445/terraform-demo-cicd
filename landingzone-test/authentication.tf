@@ -4,7 +4,6 @@ terraform {
     storage_account_name = "strtfstateeusbs001"
     container_name       = "tfstate-container"
     key                  = "lz-test.tfstate"
-    use_azuread_auth     = true
   }
 
   required_providers {
