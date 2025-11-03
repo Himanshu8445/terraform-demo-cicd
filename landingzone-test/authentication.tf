@@ -14,7 +14,7 @@ terraform {
   }
 }
 
-#####Configure the Azure Provider ##
+#####Configure the Azure Provider ####
 provider "azurerm" {
   features {}
 }

@@ -9,6 +9,7 @@ jobs:
   terraform-apply:
     name: 'Terraform Apply'
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment: test
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
