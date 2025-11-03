@@ -36,7 +36,7 @@ storage_accounts = {
   }
 }
 
-containers = {}
+# containers = {}
 sa_additional_tags = {
   iac = "Terraform"
 }
