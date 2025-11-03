@@ -4,7 +4,13 @@ variable "storage_accounts" {
     sku                             = string
     resource_group_name             = string
     location                        = string
+    account_kind                    = string
+    access_tier                     = string
+    assign_identity                 = bool
+    cmk_enable                      = bool
     is_hns_enabled                  = bool
+    min_tls_version                 = string
+    large_file_share_enabled        = bool
     public_network_access_enabled   = bool
     allow_nested_items_to_be_public = bool
     network_rules = object({
@@ -18,15 +24,15 @@ variable "storage_accounts" {
   default     = {}
 }
 
-# variable "containers" {
-#   type = map(object({
-#     name                  = string
-#     storage_account_name  = string
-#     container_access_type = string
-#   }))
-#   description = "Map of Storage Containers"
-#   default     = {}
-# }
+variable "containers" {
+  type = map(object({
+    name                  = string
+    storage_account_name  = string
+    container_access_type = string
+  }))
+  description = "Map of Storage Containers"
+  default     = {}
+}
 
 variable "sa_additional_tags" {
   type        = map(string)
