@@ -10,7 +10,6 @@ resource "azurerm_storage_account" "storage_acct" {
   is_hns_enabled                  = each.value.is_hns_enabled
   public_network_access_enabled   = each.value.public_network_access_enabled
   allow_nested_items_to_be_public = each.value.allow_nested_items_to_be_public
-  https_traffic_only_enabled      = each.value.https_traffic_only_enabled
   tags                            = var.sa_additional_tags
   blob_properties {
     delete_retention_policy {

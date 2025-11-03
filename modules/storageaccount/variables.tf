@@ -4,16 +4,9 @@ variable "storage_accounts" {
     sku                             = string
     resource_group_name             = string
     location                        = string
-    account_kind                    = string
-    access_tier                     = string
-    assign_identity                 = bool
-    cmk_enable                      = bool
     is_hns_enabled                  = bool
-    min_tls_version                 = string
-    large_file_share_enabled        = bool
     public_network_access_enabled   = bool
     allow_nested_items_to_be_public = bool
-    https_traffic_only_enabled      = bool
     network_rules = object({
       bypass                     = list(string) # (Optional) Specifies whether traffic is bypassed for Logging/Metrics/AzureServices. Valid options are any combination of Logging, Metrics, AzureServices, or None.
       default_action             = string       # (Required) The Default Action to use when no rules match from ip_rules / virtual_network_subnet_ids. Possible values are Allow and Deny.
