@@ -9,7 +9,7 @@ variable "resource_groups" {
   default = {}
 }
 
-##Storage Account
+##Storage Account##
 
 variable "storage_accounts" {
   type = map(object({
