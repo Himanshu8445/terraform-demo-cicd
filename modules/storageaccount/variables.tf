@@ -24,15 +24,15 @@ variable "storage_accounts" {
   default     = {}
 }
 
-variable "containers" {
-  type = map(object({
-    name                  = string
-    storage_account_name  = string
-    container_access_type = string
-  }))
-  description = "Map of Storage Containers"
-  default     = {}
-}
+# variable "containers" {
+#   type = map(object({
+#     name                  = string
+#     storage_account_name  = string
+#     container_access_type = string
+#   }))
+#   description = "Map of Storage Containers"
+#   default     = {}
+# }
 
 variable "sa_additional_tags" {
   type        = map(string)
