@@ -26,6 +26,7 @@ variable "storage_accounts" {
     large_file_share_enabled        = bool
     public_network_access_enabled   = bool
     allow_nested_items_to_be_public = bool
+    https_traffic_only_enabled      = bool
     network_rules = object({
       bypass                     = list(string) # (Optional) Specifies whether traffic is bypassed for Logging/Metrics/AzureServices. Valid options are any combination of Logging, Metrics, AzureServices, or None.
       default_action             = string       # (Required) The Default Action to use when no rules match from ip_rules / virtual_network_subnet_ids. Possible values are Allow and Deny.

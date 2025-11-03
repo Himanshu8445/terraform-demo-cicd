@@ -33,6 +33,7 @@ storage_accounts = {
     network_rules                   = null
     public_network_access_enabled   = true
     allow_nested_items_to_be_public = true
+    https_traffic_only_enabled      = false
   }
 }
 
