@@ -1,4 +1,5 @@
 terraform {
+  required_version = ">= 1.5.0"
   backend "azurerm" {
     resource_group_name  = "rg-tfstate-eus-01"
     storage_account_name = "strtfstateeusbs001"
@@ -9,8 +10,8 @@ terraform {
 
   required_providers {
     azurerm = {
-      source           = "hashicorp/azurerm"
-      required_version = "=4.14.0"
+      source  = "hashicorp/azurerm"
+      version = "=4.14.0"
     }
   }
 }
