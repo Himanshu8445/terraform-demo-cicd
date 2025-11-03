@@ -44,17 +44,6 @@ jobs:
           tflint --init
           tflint --recursive
 
-# Initialize CodeQL
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: terraform
-
-# Run CodeQL analysis
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3      
-
 # Terraform Init
 
       - name: Terraform Init
