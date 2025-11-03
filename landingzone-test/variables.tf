@@ -17,12 +17,7 @@ variable "storage_accounts" {
     sku                             = string
     resource_group_name             = string
     location                        = string
-    account_kind                    = string
-    access_tier                     = string
-    cmk_enable                      = bool
-    min_tls_version                 = string
     is_hns_enabled                  = bool
-    large_file_share_enabled        = bool
     public_network_access_enabled   = bool
     allow_nested_items_to_be_public = bool
     network_rules = object({
