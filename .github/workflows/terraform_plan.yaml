@@ -1,0 +1,66 @@
+name: 'Terraform Plan'
+
+on:
+  pull_request:
+    paths:
+      - 'landingzone-test/**'
+      - '.github/workflows/terraform_plan.yaml'
+
+jobs:
+  terraform-plan:
+    name: 'Terraform Plan'
+    runs-on: ubuntu-latest
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID_TEST }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET_TEST }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID_TEST }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID_TEST }}
+    defaults:
+      run:
+        working-directory: ./landingzone-test
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+# Setup Terraform
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+# Setup TFLint
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.51.0
+
+# Run TFLint
+
+      - name: Run TFLint
+        run: |
+          tflint --init
+          tflint --recursive
+
+# tfsec for security & compliance checks
+      - name: Run tfsec Security Scan
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          working_directory: ./landingzone-test
+
+# Terraform Init
+
+      - name: Terraform Init
+        run: terraform init
+
+# Terraform Format Check
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+# Terraform Plan
+
+      - name: Terraform Plan
+        run: terraform plan -no-color -out=plan.out

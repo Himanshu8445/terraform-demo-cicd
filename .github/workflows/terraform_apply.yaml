@@ -1,0 +1,53 @@
+name: 'Terraform Apply'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform-apply:
+    name: 'Terraform Apply'
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: test
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+    defaults:
+      run:
+        working-directory: ./landingzone-test
+        shell: bash
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+# Setup Terraform 
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+# Terraform Init
+
+      - name: Terraform Init
+        run: terraform init
+
+# Terraform Format Check
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+# Terraform Plan
+
+      - name: Terraform Plan
+        run: terraform plan -no-color -out=plan.out
+
+# Terraform Apply
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve plan.out
