@@ -1,58 +1,58 @@
-name: 'Test Environment Landing Zone'
- 
+name: 'Terraform Landing Zone Deployment'
+
 on:
   push:
     branches: [ main ]
     paths:
-    - 'landingzone-test/**'
-    - ".github/workflows/terraform_test_lz.yaml"
+      - 'landingzone-test/**'
+      - ".github/workflows/terraform_test_lz.yaml"
   pull_request:
     paths:
-    - 'landingzone-test/**'
-    - ".github/workflows/terraform_test_lz.yaml"
+      - 'landingzone-test/**'
+      - ".github/workflows/terraform_test_lz.yaml"
 
 jobs:
-  terraform:
-    name: 'TEST_LZ_Deployment'
+  terraform-plan:
+    name: 'Terraform Plan'
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event_name == 'push'
     env:
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-    environment: 
-      name: test
-
-## Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID_TEST }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET_TEST }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID_TEST }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID_TEST }}
     defaults:
       run:
         working-directory: ./landingzone-test
         shell: bash
     steps:
-# Checkout the repository to the GitHub Actions runner
-    - name: Checkout
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      - run: terraform init
+      - run: terraform fmt -check
+      - run: terraform plan -no-color -out=plan.out
 
-# Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with: 
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-# https://github.com/actions/setup-node 
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-# Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
-    - name: Terraform Init
-      run: terraform init
-# Formatting of tf files
-    - name: Terraform Fmt
-      run: terraform fmt      
-# # Generates an execution plan for Terraform
-    - name: Terraform Plan
-      if: github.event_name == 'pull_request' || github.event_name == 'push'
-      run: terraform plan -no-color -out=plan.out
-# On push to main, build or change infrastructure according to Terraform configuration files
-    - name: Terraform Apply
-      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve
+  terraform-apply:
+    name: 'Terraform Apply'
+    runs-on: ubuntu-latest
+    needs: terraform-plan
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment: test   # 👈 reviewers enforced here
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+    defaults:
+      run:
+        working-directory: ./landingzone-test
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      - run: terraform init
+      - run: terraform apply -auto-approve
