@@ -25,7 +25,6 @@ storage_accounts = {
     location                        = "eastus"
     account_kind                    = null
     access_tier                     = null
-    assign_identity                 = true
     cmk_enable                      = true
     min_tls_version                 = "TLS1_2"
     is_hns_enabled                  = false
@@ -33,7 +32,6 @@ storage_accounts = {
     network_rules                   = null
     public_network_access_enabled   = true
     allow_nested_items_to_be_public = true
-    https_traffic_only_enabled      = false
   }
 }
 

@@ -19,7 +19,6 @@ variable "storage_accounts" {
     location                        = string
     account_kind                    = string
     access_tier                     = string
-    assign_identity                 = bool
     cmk_enable                      = bool
     min_tls_version                 = string
     is_hns_enabled                  = bool
