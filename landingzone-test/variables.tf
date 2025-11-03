@@ -41,7 +41,7 @@ variable "resource_groups" {
 #   default     = {}
 # }
 
-variable "sa_additional_tags" {
-  type        = map(string)
-  description = "Tags of the SA in addition to the resource group tag."
-}
+# variable "sa_additional_tags" {
+#   type        = map(string)
+#   description = "Tags of the SA in addition to the resource group tag."
+# }
