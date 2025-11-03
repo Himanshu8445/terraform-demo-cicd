@@ -23,16 +23,49 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+# Setup Terraform
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
+# Setup TFLint
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.51.0
+
+# Run TFLint
+
+      - name: Run TFLint
+        run: |
+          tflint --init
+          tflint --recursive
+
+# Initialize CodeQL
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: terraform
+
+# Run CodeQL analysis
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3      
+
+# Terraform Init
+
       - name: Terraform Init
         run: terraform init
 
+# Terraform Format Check
+
       - name: Terraform Format Check
         run: terraform fmt -check
+
+# Terraform Plan
 
       - name: Terraform Plan
         run: terraform plan -no-color -out=plan.out
