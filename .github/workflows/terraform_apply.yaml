@@ -4,15 +4,12 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'landingzone-test/**'
-      - '.github/workflows/terraform_apply.yaml'
 
 jobs:
   terraform-apply:
     name: 'Terraform Apply'
     runs-on: ubuntu-latest
-    environment: test   # 👈 reviewers approval only for apply
+    environment: test
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
