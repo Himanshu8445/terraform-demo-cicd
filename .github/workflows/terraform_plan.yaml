@@ -30,18 +30,21 @@ jobs:
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-# TFLint for syntax and best practices
+# Setup TFLint
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: v0.51.0
+
+# Run TFLint
 
       - name: Run TFLint
-        uses: terraform-linters/tflint-load-config-action@v1
-        with:
-          tflint_version: latest
-      - run: |
+        run: |
           tflint --init
           tflint --recursive
 
 # tfsec for security & compliance checks
-
       - name: Run tfsec Security Scan
         uses: aquasecurity/tfsec-action@v1.0.3
         with:
